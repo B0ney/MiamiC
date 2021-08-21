@@ -1,0 +1,21 @@
+cargo-features = ["strip"]
+
+[package]
+name = "MiamiC"
+version = "0.1.0"
+authors = ["B0ney - https://github.com/B0ney"]
+repository = "https://github.com/B0ney/MiamiC"
+license = "GPLv3"
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[profile.release]
+strip = true
+opt-level = "s"
+lto = true          # Enable Link Time Optimization
+codegen-units = 1   # Reduce number of codegen units to increase optimizations.
+panic = 'abort'     # Abort on panic
+
+[dependencies]
+byteorder = "1.4.3"
