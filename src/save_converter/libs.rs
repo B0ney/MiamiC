@@ -28,9 +28,14 @@ impl Block {
 
 pub fn open_save_file(save_path: &str) -> Result<Vec<u8>, String> {
     let file_metadata = fs::metadata(save_path).map_err(|e| e.to_string())?;
-    let save_file_size = file_metadata.len() as usize;
-
+    
+    if !file_metadata.is_file() {
+        Err("Unable to read save file, path is a Directory.".to_string())?
+    };   
+    
     // Make sure the loaded file is the right size before we load it in memory
+    let save_file_size = file_metadata.len() as usize;
+    
     if save_file_size != FILE_SIZE {
         Err(format!(
             "INVALID SAVE FILE! ALL GTA:VC SAVES MUST BE 0x{:04X} BYTES LARGE.\nFILE IS: 0x{:04X} BYTES LARGE.\n\nAre you sure the loaded savefile is from GTA: Vice City?",
