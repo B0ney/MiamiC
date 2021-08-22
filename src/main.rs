@@ -10,8 +10,11 @@ fn main() {
     println!("--MiamiC-- \nBy B0ney (https://github.com/B0ney)\nSave converter for GTA: Vice City (PC versions)\n\nHow to use:\n   miamic 'YOUR_SAVE_PATH'\n");
     
     if let Err(e) = run_tool() {
-        println!("{}", e)
+        println!("{}\n", e);
     };
+
+    println!("Press any key to continue.");
+    drop(input());
 }
 
 
