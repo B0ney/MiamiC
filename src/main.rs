@@ -7,13 +7,13 @@ use save_converter::{
 };
 
 fn main() {
-    println!("--MiamiC-- \nBy B0ney (https://github.com/B0ney)\nSave converter for GTA: Vice City (PC versions)\n\nHow to use:\n   miamic 'YOUR_SAVE_PATH'\n");
+    println!("--MiamiC-- \nSave converter for GTA: Vice City (PC versions)\nBy B0ney (https://github.com/B0ney)\n\nHow to use:\n   miamic 'YOUR_SAVE_PATH'\n");
     
     if let Err(e) = run_tool() {
-        println!("{}\n", e);
+        println!("{}", e);
     };
 
-    println!("Press any key to continue.");
+    println!("\nPress ENTER to continue.");
     drop(input());
 }
 
@@ -23,7 +23,7 @@ fn run_tool() -> Result<(), String> {
     let save_path = get_save_path()?;
     let save_file = SaveFile::new(&save_path)?;
 
-    println!("Successfully Loaded: {}", save_path);
+    println!("Loaded: {}\n", save_path);
 
     // Tell the user the verison of the save file and promt them if they wish to convert it
     let save_type = save_file.SaveType.clone();
