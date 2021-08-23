@@ -1,5 +1,5 @@
 # MiamiC
-A GTA: Vice City save conversion tool written in Rust.
+A GTA: Vice City save conversion tool written in Rust.\n
 This tool will produce hash-to-hash identical results to Silent's conversion tool (https://www.gtagarage.com/mods/show.php?id=25369).
 
 # How to use:
