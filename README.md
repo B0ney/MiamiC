@@ -6,5 +6,5 @@ This tool will produce hash-to-hash identical results to Silent's conversion too
 # How to use:
 For Windows users, you can simply drag and drop your save file on the executable.  
 
-Alternatively for both Windows and Linux users, you can do this:
-miamic "YOUR_SAVE_PATH"
+Alternatively for both Windows and Linux users:  
+```./miamic "YOUR_SAVE_PATH"```
