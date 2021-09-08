@@ -17,7 +17,6 @@ fn main() {
     drop(input());
 }
 
-
 fn run_tool() -> Result<(), String> {
     // Make sure the program can load the save file
     let save_path = get_save_path()?;
@@ -26,29 +25,43 @@ fn run_tool() -> Result<(), String> {
     println!("Loaded: {}\n", save_path);
 
     // Tell the user the verison of the save file and promt them if they wish to convert it
-    let save_type = save_file.SaveType.clone();
-    let user_input: bool = prompt(save_type)?;
+    let user_input: bool = prompt(&save_file.SaveType)?;
 
     if user_input {
-        convert_save(save_file, &save_path)?;
+        convert_save(save_file, &save_path)?
     } else {
         Err("User aborted".to_string())?
     };
-
+    
     Ok(())
 }
 
 fn convert_save(mut save_file: SaveFile, save_path: &str) -> Result<(), String> {
-    // Attempt to make a backup of the original save file before converting it
+    backup_save(&mut save_file, save_path)?;
+    save_file.convert_save(save_path)?;
+    
+    Ok(()) 
+}
+
+fn backup_save(save_file: &mut SaveFile, save_path: &str) -> Result<(), String> {
+    // Attempt to backup the original save flie before converting it. 
+    // If this fails, ask the user if it's okay to make a backup using the save loaded in memory
     let backup_location = format!("{}.bak", save_path);
 
-    fs::copy(save_path, &backup_location).map_err(|e| e.to_string())?;
+    if let Err(msg) = fs::copy(save_path, &backup_location) {
+        println!("Cannot backup original save: {}\nMake backup using the loaded save? Y/n", msg);
+        
+        let user_choice = input()?;
 
-    println!("Original save backed up to: {}", &backup_location);
+        match user_choice.chars().nth(0) {
+            Some('n') | Some('N') => Err("Conversion aborted.")?,
 
-    save_file.convert_save(save_path)?;
-
-    Ok(()) 
+            _ => save_file.export(&backup_location),
+        } 
+    } else {
+        println!("Original save backed up to: {}", &backup_location);
+        Ok(())
+    }
 }
 
 fn input() -> Result<String, String> {
@@ -61,7 +74,7 @@ fn input() -> Result<String, String> {
     Ok(user_input)
 }
 
-fn prompt(save_type: SaveType) -> Result<bool, String> {
+fn prompt(save_type: &SaveType) -> Result<bool, String> {
     match save_type {
         SaveType::Steam => {
             println!("STEAM version detected, convert to RETAIL? y/N? ");
@@ -73,9 +86,9 @@ fn prompt(save_type: SaveType) -> Result<bool, String> {
             Err("Android and IOS saves are not supported".to_string())?;
         }
         _ => {
-            Err("Cannot determine Save".to_string())?;
+            Err("Cannot determine save type".to_string())?;
         }
-    }
+    };
 
     let user_choice = input()?;
 

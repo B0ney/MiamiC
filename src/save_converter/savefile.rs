@@ -17,15 +17,15 @@ use super::libs::{
 };
 
 #[derive(Debug)]
-pub struct SaveFile {
+pub struct SaveFile<'a> {
     pub Checksum: u32,
     pub SaveType: SaveType,
     pub File: Vec<u8>,
     pub Blocks: [Block; 23], // Array containing location for all 23 blocks
-    save_location: String,
+    pub save_location: &'a str,
 }
 
-impl SaveFile {
+impl <'a> SaveFile<'a> {
     //NOTE: A GTA VC save file uses Little endian for binary data
     pub fn new(save_path: &str) -> Result<SaveFile, String> {       
         match open_save_file(save_path) {
@@ -34,14 +34,14 @@ impl SaveFile {
                 let block_info      = generate_block_info(&save_file);
                 let save_type       = find_save_type(&save_file, &block_info);
                 let save_checksum   = calculate_checksum(&save_file[SAVE_DATA]);
-                let save_location   = save_path.to_string();
+                let save_location   = save_path;
 
                 Ok(SaveFile {
                     File: save_file,
                     SaveType: save_type,
                     Checksum: save_checksum,
                     Blocks: block_info,
-                    save_location,
+                    save_location: save_location,
                 })
             },
             Err(msg) => Err(format!("{}", msg))?,
