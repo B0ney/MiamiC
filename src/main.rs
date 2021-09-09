@@ -39,7 +39,6 @@ fn run_tool() -> Result<(), String> {
 fn convert_save(mut save_file: SaveFile, save_path: &str) -> Result<(), String> {
     backup_save(&mut save_file, save_path)?;
     save_file.convert_save(save_path)?;
-    
     Ok(()) 
 }
 
@@ -50,12 +49,10 @@ fn backup_save(save_file: &mut SaveFile, save_path: &str) -> Result<(), String> 
 
     if let Err(msg) = fs::copy(save_path, &backup_location) {
         println!("Cannot backup original save: {}\nMake backup using the loaded save? Y/n", msg);
-        
         let user_choice = input()?;
 
         match user_choice.chars().nth(0) {
             Some('n') | Some('N') => Err("Conversion aborted.")?,
-
             _ => save_file.export(&backup_location),
         } 
     } else {
@@ -89,7 +86,6 @@ fn prompt(save_type: &SaveType) -> Result<bool, String> {
             Err("Cannot determine save type".to_string())?;
         }
     };
-
     let user_choice = input()?;
 
     match user_choice.chars().nth(0) {
